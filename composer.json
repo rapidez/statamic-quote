@@ -1,12 +1,12 @@
 {
-    "name": "rapidez/quote",
+    "name": "rapidez/statamic-quote",
     "description": "Allows requesting a quote when using Rapidez with Statamic",
     "keywords": [
         "rapidez",
         "quote",
         "statamic"
     ],
-    "homepage": "https://github.com/rapidez/quote",
+    "homepage": "https://github.com/rapidez/statamic-quote",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
