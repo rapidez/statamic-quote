@@ -1,0 +1,112 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: email
+            field:
+              input_type: email
+              type: text
+              display: E-mailadres
+              localizable: false
+              validate:
+                - required
+                - 'email:strict'
+          -
+            handle: first_name
+            field:
+              type: text
+              display: Voornaam
+              localizable: false
+              width: 50
+              validate:
+                - required
+          -
+            handle: last_name
+            field:
+              type: text
+              display: Achternaam
+              localizable: false
+              width: 50
+              validate:
+                - required
+          -
+            handle: company
+            field:
+              type: text
+              display: Bedrijf
+              localizable: false
+              width: 50
+          -
+            handle: vat_id
+            field:
+              type: text
+              display: Btw-id
+              localizable: false
+              width: 50
+          -
+            handle: phone
+            field:
+              input_type: tel
+              type: text
+              display: Telefoonnummer
+              localizable: false
+              validate:
+                - required
+      -
+        display: Adresgegevens
+        fields:
+          -
+            handle: zipcode
+            field:
+              type: text
+              display: Postcode
+              localizable: false
+              validate:
+                - required
+          -
+            handle: address
+            field:
+              type: text
+              display: Afleveradres
+              localizable: false
+              validate:
+                - required
+          -
+            handle: city
+            field:
+              type: text
+              display: Stad
+              localizable: false
+              validate:
+                - required
+          -
+            handle: country
+            field:
+              dictionary:
+                type: countries
+                emojis: true
+              type: dictionary
+              display: Land
+              localizable: false
+              validate:
+                - required
+      -
+        display: 'Extra informatie'
+        fields:
+          -
+            handle: products
+            field:
+              type: textarea
+              display: Producten
+              localizable: false
+              validate:
+                - required
+          -
+            handle: comments
+            field:
+              type: textarea
+              display: Opmerkingen
+              localizable: false
