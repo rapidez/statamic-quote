@@ -18,11 +18,16 @@ class SendQuoteJob implements ShouldQueue
     public function __construct(protected array $quoteData) { }
 
     public function handle() {
+        $email = $this->quoteData['formData']['email'] ?? null;
+        if (! $email) {
+            return;
+        }
+
         Rapidez::setStore($this->quoteData['store']);
 
         $pdf = Pdf::loadView('rapidez-quote::exports.quote', $this->quoteData)
             ->setOption('fontDir', resource_path('/css/fonts'));
 
-        Mail::to('jade@justbetter.nl')->send(new Quote($pdf));
+        Mail::to($email)->send(new Quote($pdf));
     }
 }
