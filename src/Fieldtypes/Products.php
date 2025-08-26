@@ -1,6 +1,6 @@
 <?php
 
-namespace Rapidez\Quote\Fieldtypes;
+namespace Rapidez\StatamicQuote\Fieldtypes;
 
 use Illuminate\Support\Arr;
 use Rapidez\Core\Facades\Rapidez;

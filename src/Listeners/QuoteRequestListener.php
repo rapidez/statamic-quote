@@ -1,9 +1,9 @@
 <?php
 
-namespace Rapidez\Quote\Listeners;
+namespace Rapidez\StatamicQuote\Listeners;
 
 use Rapidez\Core\Facades\Rapidez;
-use Rapidez\Quote\Jobs\SendQuoteJob;
+use Rapidez\StatamicQuote\Jobs\SendQuoteJob;
 use Statamic\Events\FormSubmitted;
 
 class QuoteRequestListener

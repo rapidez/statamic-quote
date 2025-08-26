@@ -1,6 +1,6 @@
 <?php
 
-namespace Rapidez\Quote\Jobs;
+namespace Rapidez\StatamicQuote\Jobs;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Bus\Queueable;
@@ -9,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Rapidez\Core\Facades\Rapidez;
-use Rapidez\Quote\Mail\Quote;
+use Rapidez\StatamicQuote\Mail\Quote;
 
 class SendQuoteJob implements ShouldQueue
 {

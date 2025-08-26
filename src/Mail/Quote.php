@@ -1,6 +1,6 @@
 <?php
 
-namespace Rapidez\Quote\Mail;
+namespace Rapidez\StatamicQuote\Mail;
 
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Bus\Queueable;

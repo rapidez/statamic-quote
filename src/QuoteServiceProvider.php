@@ -1,11 +1,11 @@
 <?php
 
-namespace Rapidez\Quote;
+namespace Rapidez\StatamicQuote;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Rapidez\Quote\Fieldtypes\Products;
-use Rapidez\Quote\Listeners\QuoteRequestListener;
+use Rapidez\StatamicQuote\Fieldtypes\Products;
+use Rapidez\StatamicQuote\Listeners\QuoteRequestListener;
 use Statamic\Events\FormSubmitted;
 use Statamic\Statamic;
 
