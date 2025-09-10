@@ -93,7 +93,7 @@ class QuoteServiceProvider extends ServiceProvider
 
     protected function bootTranslations(): static
     {
-        $this->loadJsonTranslationsFrom(__DIR__ . '/../resources/lang');
+        $this->loadJsonTranslationsFrom(__DIR__ . '/../lang');
 
         return $this;
     }
