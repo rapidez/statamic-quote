@@ -1,0 +1,45 @@
+{
+    "name": "rapidez/statamic-quote",
+    "description": "Allows requesting a quote when using Rapidez with Statamic",
+    "keywords": [
+        "rapidez",
+        "quote",
+        "statamic"
+    ],
+    "homepage": "https://github.com/rapidez/statamic-quote",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Jade Geels",
+            "email": "jade@justbetter.nl",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.0",
+        "barryvdh/laravel-dompdf": "^3.1",
+        "rapidez/core": "^4.0",
+        "rapidez/statamic": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rapidez\\StatamicQuote\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rapidez\\StatamicQuote\\QuoteServiceProvider"
+            ]
+        }
+    }
+}
