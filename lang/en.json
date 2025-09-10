@@ -1,5 +1,10 @@
 {
+    "Are you sure you want to remove this product?": "Are you sure you want to remove this product?",
     "Attached to this email is the quote you requested.": "Attached to this email is the quote you requested.",
+    "No products selected.": "No products selected.",
     "Quote": "Quote",
-    "Subject:": "Subject:"
+    "Subject:": "Subject:",
+    "Submit": "Submit",
+    "The form was submitted successfully": "The form was submitted successfully",
+    "Total (excl. VAT)": "Total (excl. VAT)"
 }
