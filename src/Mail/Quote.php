@@ -39,9 +39,15 @@ class Quote extends Mailable
      */
     public function content(): Content
     {
-        return new Content(
-            markdown: 'rapidez-quote::mail.quote',
-        );
+        if (config('rapidez.quote.email_markdown')) {
+            return new Content(
+                markdown: 'rapidez-quote::mail.quote',
+            );
+        } else {
+            return new Content(
+                view: 'rapidez-quote::mail.quote',
+            );
+        }
     }
 
     /**

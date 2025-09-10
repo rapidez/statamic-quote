@@ -62,6 +62,10 @@ class QuoteServiceProvider extends ServiceProvider
         ], 'quote-content');
 
         $this->publishes([
+            __DIR__.'/../config/rapidez/quote.php' => config_path('rapidez/quote.php'),
+        ], 'quote-config');
+
+        $this->publishes([
             __DIR__ . '/../resources/dist' => public_path('vendor/rapidez-quote'),
         ], 'quote-dist');
 
