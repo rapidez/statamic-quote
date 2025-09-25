@@ -2,7 +2,6 @@
 
 namespace Rapidez\StatamicQuote\Fieldtypes;
 
-use Illuminate\Support\Arr;
 use Rapidez\Core\Facades\Rapidez;
 use Statamic\Facades\Site;
 use Statamic\Fields\Fieldtype;
@@ -33,18 +32,18 @@ class Products extends Fieldtype
 
         return $products->map(function($product) use ($dbProducts) {
             $dbProduct = $dbProducts[$product['sku']] ?? null;
-            $productOptions = collect($product['options'] ?? [])->mapWithKeys(function (string $optionValue, string $option) use ($dbProduct): array {
-                $option = Arr::firstOrFail($dbProduct->options, fn ($productOption) => $productOption->option_id == $option);
-                $value = Arr::firstOrFail($option->values, fn ($value) => $value->option_type_id == $optionValue);
+            $productOptions = collect($product['options'] ?? [])->map(function (string $optionValue, string $option) use ($dbProduct): array {
+                $option = collect($dbProduct->options)->firstOrFail(fn ($productOption) => $productOption->option_id == $option);
+                $value = collect($option->values)->firstOrFail(fn ($value) => $value->option_type_id == $optionValue);
 
                 return [
                     'title' => $option->title,
-                    'price' => ($value?->price ?? 0) + ($option->price ?? 0),
+                    'price' => ($value?->price->price ?? 0) + ($option->price->price ?? 0),
                     'value' => $value,
                 ];
             });
 
-            $totalPrice = ($productOptions->sum('price') + $dbProduct->price) * $product['qty'];
+            $totalPrice = ($productOptions->sum('price.price') + $dbProduct->price) * $product['qty'];
 
             return [
                 ...$product,
