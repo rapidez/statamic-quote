@@ -19,7 +19,7 @@ class Quote extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public PDF $pdf)
+    public function __construct(public PDF $pdf, public array $quoteData)
     {
         $this->mailSubject = __('Quote') . ' - ' . now()->toDateTimeString();
     }

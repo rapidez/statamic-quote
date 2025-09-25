@@ -28,6 +28,6 @@ class SendQuoteJob implements ShouldQueue
         $pdf = Pdf::loadView('rapidez-quote::exports.quote', $this->quoteData)
             ->setOption('fontDir', resource_path('/css/fonts'));
 
-        Mail::to($email)->send(new Quote($pdf));
+        Mail::to($email)->send(new Quote($pdf, $this->quoteData));
     }
 }
