@@ -99,7 +99,7 @@ tabs:
           -
             handle: products
             field:
-              type: textarea
+              type: products
               display: Producten
               localizable: false
               validate:
