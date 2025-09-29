@@ -29,7 +29,6 @@
                 </x-slot:items>
             </x-rapidez::productlist>
         </template>
-        </x-rapidez::productlist>
         <div v-else class="text-muted">
             @lang('No products selected.')
         </div>
