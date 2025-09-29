@@ -7,7 +7,7 @@
             >
                 <x-slot:items>
                     <div v-for="item in items" class="flex gap-5 items-center">
-                        <button type="button" v-on:click="confirm('@lang('Are you sure you want to remove this product?')') && quoteData.removeProduct(item.sku)">
+                        <button type="button" v-on:click="window.confirm('@lang('Are you sure you want to remove this product?')') && quoteData.removeProduct(item.sku)">
                             <x-heroicon-o-x-circle class="size-6"/>
                         </button>
                         <div>
