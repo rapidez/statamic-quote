@@ -30,7 +30,7 @@ This package does not create any "request invoice" buttons on the frontend by de
 <x-rapidez-quote::button v-bind:add-products="{
     sku: addToCart.simpleProduct.sku,
     qty: addToCart.qty,
-    options: addToCart.simpleProduct.customOptions,
+    options: addToCart.customSelectedOptions,
 }">
     @lang('Request quote')
 </x-rapidez-quote::button>
