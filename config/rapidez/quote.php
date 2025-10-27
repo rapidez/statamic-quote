@@ -6,4 +6,5 @@ return [
         'primary' => '#012169',
     ],
     'email_markdown' => true,
+    'auto_send_quote' => true,
 ];
