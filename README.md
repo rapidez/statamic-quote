@@ -48,6 +48,12 @@ You can also pass an array to `add-products`, which allows you to push an array 
 </x-rapidez-quote::button>
 ```
 
+## Automatic PDF
+
+By default, this package will automatically generate a quote for you based on the products. However, you may not want this to happen for various reasons. To this end, you can disable this functionality by setting the `auto_send_quote` config setting to `false`.
+
+This can be done store-specific as well, see the [multistore configuration](https://docs.rapidez.io/4.x/configuration.html#multistore) section in the Rapidez docs.
+
 ## Styling
 
 ### Modifying the PDF

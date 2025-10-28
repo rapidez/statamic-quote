@@ -14,6 +14,10 @@ class QuoteRequestListener
             return;
         }
 
+        if (! config('rapidez.quote.auto_send_quote', true)) {
+            return;
+        }
+
         $products = $event->submission->augmentedValue('products')->value();
 
         SendQuoteJob::dispatch([
