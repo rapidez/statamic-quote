@@ -48,6 +48,32 @@ You can also pass an array to `add-products`, which allows you to push an array 
 </x-rapidez-quote::button>
 ```
 
+### Hooking into the quote data
+
+You can use the `quote.data` Eventy filter to hook into the data that's being sent to the automatic quote:
+
+```php
+Eventy::addFilter('quote.data', function ($quoteData) {
+    return [
+        ...$quoteData,
+        'products' => $quoteData['products']->map([...])
+    ];
+});
+```
+
+You can also return `null` to not send the quote under certain conditions, for example:
+
+```php
+Eventy::addFilter('quote.data', function ($quoteData) {
+    if ($quoteData['products']->contains(fn($item) => $item['product']->no_quote)) {
+        // Don't send
+        return null;
+    }
+    
+    return $quoteData;
+});
+```
+
 ## Automatic PDF
 
 By default, this package will automatically generate a quote for you based on the products. However, you may not want this to happen for various reasons. To this end, you can disable this functionality by setting the `auto_send_quote` config setting to `false`.

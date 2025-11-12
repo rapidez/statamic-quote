@@ -5,6 +5,7 @@ namespace Rapidez\StatamicQuote\Listeners;
 use Rapidez\Core\Facades\Rapidez;
 use Rapidez\StatamicQuote\Jobs\SendQuoteJob;
 use Statamic\Events\FormSubmitted;
+use TorMorten\Eventy\Facades\Eventy;
 
 class QuoteRequestListener
 {
@@ -18,12 +19,16 @@ class QuoteRequestListener
             return;
         }
 
-        $products = $event->submission->augmentedValue('products')->value();
-
-        SendQuoteJob::dispatch([
+        $quoteData = Eventy::filter('quote.data', [
             'store' => Rapidez::getStore(config('rapidez.store')),
-            'products' => $products,
+            'products' => $event->submission->augmentedValue('products')->value(),
             'formData' => $event->submission->toArray(),
         ]);
+
+        if (!$quoteData) {
+            return;
+        }
+
+        SendQuoteJob::dispatch($quoteData);
     }
 }
