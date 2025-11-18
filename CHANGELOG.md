@@ -1,6 +1,16 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/1.2.0...1.2.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/1.3.0...1.3.0)
+## [1.3.0](https://github.com/rapidez/statamic-quote/releases/tag/1.3.0) - 2025-11-18
+
+### Added
+
+- Eventy filter for quote data (#9)
+
+### Fixed
+
+- Routes middleware fix (#8)
+
 ## [1.2.0](https://github.com/rapidez/statamic-quote/releases/tag/1.2.0) - 2025-10-28
 
 ### Added
