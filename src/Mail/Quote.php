@@ -58,7 +58,10 @@ class Quote extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromData(fn() => $this->pdf->output(), $this->mailSubject)->withMime('application/pdf')
+            Attachment::fromData(
+                fn() => $this->pdf->output(),
+                $this->mailSubject . '.pdf',
+            )->withMime('application/pdf')
         ];
     }
 }
