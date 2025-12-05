@@ -110,3 +110,10 @@ tabs:
               type: textarea
               display: Opmerkingen
               localizable: false
+          -
+            handle: store_code
+            field:
+              type: text
+              display: 'Store code'
+              localizable: false
+              visibility: computed

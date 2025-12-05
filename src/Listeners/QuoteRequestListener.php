@@ -15,6 +15,8 @@ class QuoteRequestListener
             return;
         }
 
+        $event->submission->set('store_code', config('rapidez.store_code'));
+
         if (! config('rapidez.quote.auto_send_quote', true)) {
             return;
         }
