@@ -3,25 +3,33 @@
 namespace Rapidez\StatamicQuote\Fieldtypes;
 
 use Rapidez\Core\Facades\Rapidez;
-use Statamic\Facades\Site;
 use Statamic\Fields\Fieldtype;
 
 class Products extends Fieldtype
 {
     protected $selectable = false;
     protected $selectableInForms = true;
-    
+
+    public function process($value)
+    {
+        return [
+            'store' => config('rapidez.store'),
+            'products' => $value,
+        ];
+    }
+
     public function preProcess($products)
     {
         return $this->augment($products);
     }
 
-    public function augment($products)
+    public function augment($data)
     {
-        // Make sure to set the correct Rapidez store before trying to retrieve the products
-        Rapidez::setStore(Site::current()->handle);
+        $store = $data['store'] ?? 1;
 
-        $products = collect(json_decode($products, true));
+        Rapidez::setStore($store);
+
+        $products = collect(json_decode($data['products'] ?? $data, true));
         $productModel = config('rapidez.models.product');
         /** @var \Rapidez\Core\Models\Product $productInstance */
         $productInstance = new $productModel;
@@ -30,24 +38,29 @@ class Products extends Fieldtype
             ->get()
             ->keyBy('sku');
 
-        return $products->map(function($product) use ($dbProducts) {
+        return $products->map(function($product) use ($dbProducts, $store) {
             $dbProduct = $dbProducts[$product['sku']] ?? null;
-            $productOptions = collect($product['options'] ?? [])->map(function (string $optionValue, string $option) use ($dbProduct): array {
-                $option = collect($dbProduct->options)->firstOrFail(fn ($productOption) => $productOption->option_id == $option);
-                $value = collect($option->values)->firstOrFail(fn ($value) => $value->option_type_id == $optionValue);
 
-                return [
-                    'title' => $option->title,
-                    'price' => ($value?->price->price ?? 0) + ($option->price->price ?? 0),
-                    'value' => $value,
-                ];
-            });
+            $productOptions = $dbProduct
+                ? collect($product['options'] ?? [])->map(function (string $optionValue, string $option) use ($dbProduct): array {
+                    $option = collect($dbProduct->options)->firstOrFail(fn ($productOption) => $productOption->option_id == $option);
+                    $value = collect($option->values)->firstOrFail(fn ($value) => $value->option_type_id == $optionValue);
 
-            $totalPrice = ($productOptions->sum('price.price') + $dbProduct->price) * $product['qty'];
+                    return [
+                        'title' => $option->title,
+                        'price' => ($value?->price->price ?? 0) + ($option->price->price ?? 0),
+                        'value' => $value,
+                    ];
+                })
+                : null;
+
+            $totalPrice = $dbProduct
+                ? ($productOptions->sum('price.price') + $dbProduct->price) * $product['qty']
+                : null;
 
             return [
                 ...$product,
-                'store' => config('rapidez.store'),
+                'store' => $store,
                 'product' => $dbProduct,
                 'options' => $productOptions,
                 'totalPrice' => $totalPrice,
