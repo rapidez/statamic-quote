@@ -1,6 +1,12 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/1.3.1...1.3.1)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/2.0.0...2.0.0)
+## [2.0.0](https://github.com/rapidez/statamic-quote/releases/tag/2.0.0) - 2025-12-09
+
+### Added
+
+- Add store code in quote via processing & fallback for older data (#11)
+
 ## [1.3.1](https://github.com/rapidez/statamic-quote/releases/tag/1.3.1) - 2025-11-25
 
 ### Fixed
