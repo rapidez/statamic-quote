@@ -43,13 +43,13 @@ class Products extends Fieldtype
 
             $productOptions = $dbProduct
                 ? collect($product['options'] ?? [])->map(function (string $optionValue, string $option) use ($dbProduct): array {
-                    $option = collect($dbProduct->options)->firstOrFail(fn ($productOption) => $productOption->option_id == $option);
-                    $value = collect($option->values)->firstOrFail(fn ($value) => $value->option_type_id == $optionValue);
+                    $optionData = collect($dbProduct->options)->first(fn ($productOption) => $productOption->option_id == $option) ?? null;
+                    $value = collect($optionData?->values ?? [])->first(fn ($value) => $value->option_type_id == $optionValue) ?? null;
 
                     return [
-                        'title' => $option->title,
-                        'price' => ($value?->price->price ?? 0) + ($option->price->price ?? 0),
-                        'value' => $value,
+                        'title' => $optionData?->title ?? $option,
+                        'price' => ($value?->price->price ?? 0) + ($optionData?->price->price ?? 0),
+                        'value' => $value ?? ['title' => $optionValue],
                     ];
                 })
                 : null;
