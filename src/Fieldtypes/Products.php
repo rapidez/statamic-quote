@@ -37,7 +37,7 @@ class Products extends Fieldtype
                 ->get()
                 ->keyBy('sku');
 
-            $newData = $products->map(function($product) use ($dbProducts, $store) {
+            return $products->map(function($product) use ($dbProducts, $store) {
                 $dbProduct = $dbProducts[$product['sku']] ?? null;
 
                 $productOptions = $dbProduct
