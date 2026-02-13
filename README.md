@@ -48,6 +48,12 @@ You can also pass an array to `add-products`, which allows you to push an array 
 </x-rapidez-quote::button>
 ```
 
+## Automatic PDF
+
+By default, this package will automatically generate a quote for you based on the products. However, you may not want this to happen for various reasons. To this end, you can disable this functionality by setting the `auto_send_quote` config setting to `false`.
+
+This can be done store-specific as well, see the [multistore configuration](https://docs.rapidez.io/4.x/configuration.html#multistore) section in the Rapidez docs.
+
 ### Hooking into the quote data
 
 You can use the `quote.data` Eventy filter to hook into the data that's being sent to the automatic quote:
@@ -74,11 +80,15 @@ Eventy::addFilter('quote.data', function ($quoteData) {
 });
 ```
 
-## Automatic PDF
+### Hooking into the mail itself
 
-By default, this package will automatically generate a quote for you based on the products. However, you may not want this to happen for various reasons. To this end, you can disable this functionality by setting the `auto_send_quote` config setting to `false`.
+You can use the `quote.mail` Eventy filter to hook into the mailable object that gets used for automatic quotes. For example, if you want to add a `bcc` to the sent email:
 
-This can be done store-specific as well, see the [multistore configuration](https://docs.rapidez.io/4.x/configuration.html#multistore) section in the Rapidez docs.
+```php
+Eventy::addFilter('quote.mail', function ($mail) {
+    return $mail->bcc('bcc@example.com');
+});
+```
 
 ## Styling
 
