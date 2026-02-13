@@ -1,6 +1,17 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/2.0.0...2.0.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/2.1.0...2.1.0)
+## [2.1.0](https://github.com/rapidez/statamic-quote/releases/tag/2.1.0) - 2026-02-13
+
+### Added
+
+- quote.mail filter (#14)
+
+### Fixed
+
+- Fallback for null options/prices (#12)
+- Use withStore to avoid the store being incorrect after augmenting (#13)
+
 ## [2.0.0](https://github.com/rapidez/statamic-quote/releases/tag/2.0.0) - 2025-12-09
 
 ### Added
