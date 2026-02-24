@@ -20,7 +20,7 @@
     "require": {
         "php": "^8.0",
         "barryvdh/laravel-dompdf": "^3.1",
-        "rapidez/core": "^4.0",
+        "rapidez/core": "^5.0",
         "rapidez/statamic": "^5.0|^6.0"
     },
     "autoload": {
