@@ -1,4 +1,3 @@
-import 'Vendor/rapidez/core/resources/js/vue'
 import { defineAsyncComponent } from 'vue'
 
 document.addEventListener('vue:loaded', function (event) {
