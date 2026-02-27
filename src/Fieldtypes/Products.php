@@ -32,7 +32,7 @@ class Products extends Fieldtype
             $productModel = config('rapidez.models.product');
             /** @var \Rapidez\Core\Models\Product $productInstance */
             $productInstance = new $productModel;
-            $dbProducts = $productModel::withoutGlobalScopes()
+            $dbProducts = $productModel::with('options')
                 ->whereIn($productInstance->qualifyColumn('sku'), $products->map(fn($product) => $product['sku']))
                 ->get()
                 ->keyBy('sku');
