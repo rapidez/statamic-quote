@@ -1,6 +1,13 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/2.1.0...2.1.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.0.0...5.0.0)
+## [5.0.0](https://github.com/rapidez/statamic-quote/releases/tag/5.0.0) - 2026-05-06
+
+### Added
+
+- Rapidez v5 support (#15)
+- Tailwind CSS v4 update (#16)
+
 ## [2.1.0](https://github.com/rapidez/statamic-quote/releases/tag/2.1.0) - 2026-02-13
 
 ### Added
