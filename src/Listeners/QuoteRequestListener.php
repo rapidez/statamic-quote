@@ -23,6 +23,7 @@ class QuoteRequestListener
 
         $quoteData = Eventy::filter('quote.data', [
             'store' => Rapidez::getStore(config('rapidez.store')),
+            'customer' => auth('magento-customer')->user(),
             'products' => $event->submission->augmentedValue('products')->value(),
             'formData' => $event->submission->toArray(),
         ]);
