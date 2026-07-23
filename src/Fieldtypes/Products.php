@@ -2,7 +2,12 @@
 
 namespace Rapidez\StatamicQuote\Fieldtypes;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Rapidez\Core\Facades\Rapidez;
+use Statamic\Exceptions\AssetContainerNotFoundException;
+use Statamic\Facades\AssetContainer;
+use Statamic\Fieldtypes\Assets\UndefinedContainerException;
 use Statamic\Fields\Fieldtype;
 
 class Products extends Fieldtype
@@ -10,17 +15,91 @@ class Products extends Fieldtype
     protected $selectable = false;
     protected $selectableInForms = true;
 
-    public function process($value)
+    protected function configFieldItems(): array
     {
         return [
+            [
+                'display' => __('Uploaded files'),
+                'fields' => [
+                    'allow_uploads' => [
+                        'display' => __('Allow Uploads'),
+                        'instructions' => __('statamic::fieldtypes.assets.config.allow_uploads'),
+                        'type' => 'toggle',
+                        'default' => true,
+                    ],
+                    'container' => [
+                        'display' => __('Container'),
+                        'instructions' => __('statamic::fieldtypes.assets.config.container'),
+                        'type' => 'asset_container',
+                        'max_items' => 1,
+                        'mode' => 'select',
+                        'required' => false,
+                        'default' => AssetContainer::all()->count() == 1 ? AssetContainer::all()->first()->handle() : null,
+                        'force_in_config' => true,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function process($value)
+    {
+        $products = collect(json_decode($value, true));
+
+        $customOptions = $products->pluck('customOptions', 'id');
+        $savedProducts = $products->map(fn($product) => Arr::except($product, 'customOptions'));
+
+        //if ($this->config('allow_uploads') && $this->config('container')) {
+            $uploaded = $customOptions->map(function ($options, $id) {
+                collect($options)->map(function ($value, $key) {
+                    $data = json_decode($value)->base64_encoded_data ?? null;
+                    if (!$data) {
+                        return null;
+                    }
+
+                    return $this->valueToId($data);
+                });
+            });
+        //}
+        //
+        dd($uploaded);
+
+        return [
             'store' => config('rapidez.store'),
-            'products' => $value,
+            'products' => $savedProducts->toJson(),
         ];
     }
 
     public function preProcess($products)
     {
+        dd($products);
         return $this->augment($products);
+    }
+
+    protected function valueToId($value)
+    {
+        if (Str::contains($value, '::')) {
+            return $value;
+        }
+
+        return optional($this->container()->asset($value))->id();
+    }
+
+    protected function container()
+    {
+        if ($configured = $this->config('container')) {
+            if ($container = AssetContainer::find($configured)) {
+                return $container;
+            }
+
+            throw new AssetContainerNotFoundException($configured);
+        }
+
+        if (($containers = AssetContainer::all())->count() === 1) {
+            return $containers->first();
+        }
+
+        throw new UndefinedContainerException;
     }
 
     public function augment($data)
