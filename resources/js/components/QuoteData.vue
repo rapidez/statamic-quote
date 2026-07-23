@@ -1,5 +1,6 @@
 <script>
 import { useSessionStorage } from '@vueuse/core';
+import { useIDBKeyval } from '@vueuse/integrations/useIDBKeyval'
 
 export default {
     props: {
@@ -9,37 +10,48 @@ export default {
     data() {
         return {
             products: [],
+            customOptions: useIDBKeyval('quote_custom_options', {}),
         }
     },
 
     mounted() {
         this.products = useSessionStorage('quote_products', [])
     },
-    
+
     render() {
         return this.$scopedSlots.default(this)
     },
 
     methods: {
-        pushProducts(products = null) {
+        async pushProducts(products = null) {
             if (products === null) {
                 products = this.addProducts
             }
-            
-            if (Array.isArray(products)) {
-                this.products.push(...products)
-            } else {
-                this.products.push(products)
+
+            if (!Array.isArray(products)) {
+                products = [products]
             }
+
+            products = products.map(product => ({...product, id: Math.random().toString(16)}))
+            let customOptions = Object.fromEntries(products.map(product => [product.id, product.customOptions ?? {}]))
+
+            await this.customOptions.set(customOptions)
+            this.products.push(...products.map(product => ({
+                id: product.id,
+                sku: product.sku,
+                qty: product.qty ?? 1,
+                options: product.options ?? {},
+            })))
         },
 
-        clearProducts() {
+        async clearProducts() {
+            await this.customOptions.set({})
             this.products = []
         },
 
-        newQuote(products = null) {
-            this.clearProducts()
-            this.pushProducts(products)
+        async newQuote(products = null) {
+            await this.clearProducts()
+            await this.pushProducts(products)
         },
 
         removeProduct(sku) {
@@ -59,8 +71,11 @@ export default {
             if (this.products.length === 0) {
                 return ''
             }
-            
-            return JSON.stringify(this.products)
+
+            return JSON.stringify(this.products.map(product => ({
+                ...product,
+                customOptions: this.customOptions.data[product.id] ?? {}
+            })))
         },
     },
 }
