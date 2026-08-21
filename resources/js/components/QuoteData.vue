@@ -32,6 +32,29 @@ export default {
                 products = [products]
             }
 
+            products = products.map(product => {
+                if (!('customizable_options' in product)) {
+                    return product
+                }
+
+                let options = Object.fromEntries(product.customizable_options
+                    .filter((option) => option.type != 'file')
+                    .map((option) => ([
+                        window.atob(option.customizable_option_uid).split('/')[1],
+                        option.values[0].value,
+                    ]))
+                )
+
+                let customOptions = product.customizable_options.filter((option) => option.type == 'file')
+
+                return {
+                    sku: product.sku,
+                    qty: product.qty,
+                    options: options,
+                    customOptions: customOptions,
+                }
+            })
+
             products = products.map(product => ({...product, id: Math.random().toString(16)}))
             let customOptions = Object.fromEntries(products.map(product => [product.id, product.customOptions ?? {}]))
 
