@@ -28,6 +28,17 @@ class Products extends Fieldtype
                         'type' => 'toggle',
                         'default' => true,
                     ],
+                    'max_upload_size' => [
+                        'display' => __('Maximum File Size (KB)'),
+                        'type' => 'integer',
+                        'default' => '10240',
+                    ],
+                    'allowed_filetypes' => [
+                        'display' => __('Allowed Filetypes'),
+                        'instructions' => __('The file extensions that are allowed to be uploaded, separated by a comma'),
+                        'type' => 'text',
+                        'required' => true,
+                    ],
                     'container' => [
                         'display' => __('Container'),
                         'instructions' => __('statamic::fieldtypes.assets.config.container'),
@@ -71,7 +82,7 @@ class Products extends Fieldtype
     protected function handleFileUpload($file, $optionId)
     {
         $name = basename($file['name'] ?? '');
-        if (! $name) {
+        if (! $name || ! $this->isAllowedFileType($name)) {
             return null;
         }
 
@@ -81,7 +92,7 @@ class Products extends Fieldtype
         }
 
         // 1365 here is 1024 / 6 * 8. This is to account for base64 being larger than the actual file size.
-        if (strlen($data) / 1365 > config('rapidez.quote.file_upload_max_size', 51200)) {
+        if (strlen($data) / 1365 > $this->config('max_upload_size')) {
             throw new \Exception('File exceeds the maximum upload size');
         }
 
@@ -106,7 +117,7 @@ class Products extends Fieldtype
         // Check name and valueId from said data
         $name = $fileData['value'] ?? null;
         $valueId = $fileData['id'] ?? null;
-        if (! $name || ! $valueId) {
+        if (! $name || ! $valueId || ! $this->isAllowedFileType($name)) {
             return null;
         }
 
@@ -122,14 +133,23 @@ class Products extends Fieldtype
             return null;
         };
 
-        if ($optionData->size / 1024 > config('rapidez.quote.file_upload_max_size', 51200)) {
+        if ($optionData->size / 1024 > $this->config('max_upload_size')) {
             throw new \Exception('File exceeds the maximum upload size');
         }
 
         // Once we get here we can be certain the data is legitimate
+        // TODO: This assumes that your Magento installation is on the same server as your Rapidez installation
+        // Might be worthwhile to just get the file from its url instead (but this would require allow_url_fopen to be enabled)
         $data = fopen($optionData->fullpath, 'r');
 
         return [$optionId => $this->valueToId($name, $data)];
+    }
+
+    protected function isAllowedFileType($name): bool
+    {
+        $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        $allowed = explode(',', $this->config('allowed_filetypes'));
+        return in_array($extension, $allowed);
     }
 
     public function preProcess($products)
