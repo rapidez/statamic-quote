@@ -31,6 +31,7 @@ This package does not create any "request invoice" buttons on the frontend by de
     sku: addToCart.simpleProduct.sku,
     qty: addToCart.qty,
     options: addToCart.customSelectedOptions,
+    customOptions: addToCart.customOptions,
 }">
     @lang('Request quote')
 </x-rapidez-quote::button>
@@ -42,11 +43,13 @@ You can also pass an array to `add-products`, which allows you to push an array 
 <x-rapidez-quote::button v-bind:add-products="cart.items.map(item => ({
     sku: item.product.sku,
     qty: item.quantity,
-    options: item.options,
+    customizable_options: item.customizable_options,
 }))">
     @lang('Request quote')
 </x-rapidez-quote::button>
 ```
+
+Note that you can use `customizable_options` here, which will automatically handle cart data for you.
 
 ## Automatic PDF
 
