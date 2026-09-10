@@ -1,6 +1,14 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.0.0...5.0.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.1.0...5.1.0)
+## [5.1.0](https://github.com/rapidez/statamic-quote/releases/tag/5.1.0) - 2026-09-10
+
+### Added
+
+- Add customer data to quote request data (e7a67de)
+
+
+
 ## [5.0.0](https://github.com/rapidez/statamic-quote/releases/tag/5.0.0) - 2026-05-06
 
 ### Added
