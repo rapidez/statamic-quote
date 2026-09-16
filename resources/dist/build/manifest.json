@@ -1,11 +1,11 @@
 {
   "resources/css/cp.css": {
-    "file": "assets/cp-99da2a74.css",
+    "file": "assets/cp-dff5d879.css",
     "isEntry": true,
     "src": "resources/css/cp.css"
   },
   "resources/js/cp.js": {
-    "file": "assets/cp-2a85ac64.js",
+    "file": "assets/cp-48d33a2b.js",
     "isEntry": true,
     "src": "resources/js/cp.js"
   }
