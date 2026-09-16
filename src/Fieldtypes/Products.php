@@ -135,7 +135,7 @@ class Products extends Fieldtype
         };
 
         if ($optionData->size / 1024 > $this->config('max_upload_size')) {
-            throw new \Exception('File exceeds the maximum upload size');
+            throw ValidationException::withMessages(['file' => 'File exceeds the maximum upload size']);
         }
 
         // Once we get here we can be certain the data is legitimate
