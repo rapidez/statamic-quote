@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Rapidez\Core\Facades\Rapidez;
 use Rapidez\Core\Models\QuoteItemOption;
 use Statamic\Exceptions\AssetContainerNotFoundException;
+use Statamic\Exceptions\ValidationException;
 use Statamic\Facades\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Fieldtypes\Assets\UndefinedContainerException;
@@ -67,7 +68,7 @@ class Products extends Fieldtype
                     $file = collect(is_string($value) ? json_decode($value) : $value);
 
                     $isCartData = $file->has('customizable_option_uid');
-                    return $isCartData ? $this->handleCartDataUpload($file) : $this->handleFileUpload($file, $key);
+                    return ($isCartData ? $this->handleCartDataUpload($file) : $this->handleFileUpload($file, $key)) ?? [];
                 });
             });
         }
@@ -75,7 +76,7 @@ class Products extends Fieldtype
         return [
             'store' => config('rapidez.store'),
             'products' => $savedProducts->toJson(),
-            'uploaded' => $uploaded,
+            'uploaded' => $uploaded ?? null,
         ];
     }
 
@@ -93,7 +94,7 @@ class Products extends Fieldtype
 
         // 1365 here is 1024 / 6 * 8. This is to account for base64 being larger than the actual file size.
         if (strlen($data) / 1365 > $this->config('max_upload_size')) {
-            throw new \Exception('File exceeds the maximum upload size');
+            throw new ValidationException('File exceeds the maximum upload size');
         }
 
         return [$optionId => $this->valueToId($name, $data)];
@@ -159,7 +160,7 @@ class Products extends Fieldtype
 
     protected function valueToId($name, $value)
     {
-        $folder = now()->format('YmdHis');
+        $folder = uniqid(now()->format('YmdHis'));
         $path = "$folder/$name";
 
         $asset = $this->container()->makeAsset($path);
@@ -235,7 +236,7 @@ class Products extends Fieldtype
                             return null;
                         }
 
-                        $option = collect($dbProduct->options)->first(fn ($productOption) => $productOption->option_id == $optionId);
+                        $option = collect($dbProduct->options ?? [])->first(fn ($productOption) => $productOption->option_id == $optionId);
 
                         return [
                             'path' => $asset->url(),
