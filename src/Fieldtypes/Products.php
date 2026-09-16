@@ -94,7 +94,7 @@ class Products extends Fieldtype
 
         // 1365 here is 1024 / 6 * 8. This is to account for base64 being larger than the actual file size.
         if (strlen($data) / 1365 > $this->config('max_upload_size')) {
-            throw new ValidationException('File exceeds the maximum upload size');
+            throw ValidationException::withMessages(['file' => 'File exceeds the maximum upload size']);
         }
 
         return [$optionId => $this->valueToId($name, $data)];
