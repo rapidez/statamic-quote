@@ -55,7 +55,7 @@ export default {
             })
 
             products = products.map(product => ({...product, id: Math.random().toString(16)}))
-            let newCustomOptions = Object.fromEntries(products.map(product => [product.id, product.customOptions ?? {}]))
+            let customOptions = Object.fromEntries(products.map(product => [product.id, product.customOptions ?? {}]))
 
             await this.customOptions.set(customOptions)
             this.products.push(...products.map(product => ({

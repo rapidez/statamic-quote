@@ -3,10 +3,12 @@
 namespace Rapidez\StatamicQuote\Fieldtypes;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Rapidez\Core\Facades\Rapidez;
 use Rapidez\Core\Models\QuoteItemOption;
 use Statamic\Exceptions\AssetContainerNotFoundException;
 use Statamic\Exceptions\ValidationException;
+use Statamic\Assets\AssetContainer as AssetContainerModel;
 use Statamic\Facades\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Fieldtypes\Assets\UndefinedContainerException;
@@ -61,12 +63,12 @@ class Products extends Fieldtype
         $products = collect(json_decode($value, true));
 
         $customOptions = $products->pluck('customOptions', 'id');
-        $savedProducts = $products->map(fn($product) => Arr::except($product, 'customOptions'));
+        $savedProducts = $products->map(fn(array $product) => Arr::except($product, 'customOptions'));
 
         $uploaded = null;
         if ($this->config('allow_uploads') && $this->config('container')) {
-            $uploaded = $customOptions->map(function ($options, $id) {
-                return collect($options)->mapWithKeys(function ($value, $key) {
+            $uploaded = $customOptions->map(function (mixed $options, int|string $id) {
+                return collect($options)->mapWithKeys(function (mixed $value, int|string $key) {
                     $file = collect(is_string($value) ? json_decode($value) : $value);
 
                     $isCartData = $file->has('customizable_option_uid');
@@ -82,7 +84,7 @@ class Products extends Fieldtype
         ];
     }
 
-    protected function handleFileUpload($file, $optionId)
+    protected function handleFileUpload(Collection $file, int|string $optionId): ?array
     {
         $name = basename($file['name'] ?? '');
         if (! $name || ! $this->isAllowedFileType($name)) {
@@ -102,7 +104,7 @@ class Products extends Fieldtype
         return [$optionId => $this->valueToId($name, $data)];
     }
 
-    protected function handleCartDataUpload($file)
+    protected function handleCartDataUpload(Collection $file): ?array
     {
         $optionUid = base64_decode($file['customizable_option_uid']);
         $optionId = explode('/', $optionUid)[1] ?? null;
@@ -148,9 +150,21 @@ class Products extends Fieldtype
         return [$optionId => $this->valueToId($name, $data)];
     }
 
-    protected function isAllowedFileType($name): bool
+    protected const DISALLOWED_FILETYPES = [
+        'php', 'php3', 'php4', 'php5', 'php7', 'phtml', 'pht', 'phar',
+        'htaccess', 'htpasswd',
+        'html', 'htm', 'shtml', 'svg', 'xhtml',
+        'js', 'mjs', 'jsp', 'jspx', 'asp', 'aspx', 'cer', 'cgi', 'pl', 'py', 'sh',
+        'exe', 'dll', 'bat', 'cmd', 'msi', 'com',
+    ];
+
+    protected function isAllowedFileType(string $name): bool
     {
         $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        if (in_array($extension, self::DISALLOWED_FILETYPES)) {
+            return false;
+        }
+
         $allowed = explode(',', $this->config('allowed_filetypes') ?? '');
         return in_array($extension, $allowed);
     }
@@ -160,7 +174,7 @@ class Products extends Fieldtype
         return $this->augment($products);
     }
 
-    protected function valueToId($name, $value)
+    protected function valueToId(string $name, mixed $value): string
     {
         $folder = uniqid(now()->format('YmdHis'));
         $path = "$folder/$name";
@@ -179,7 +193,7 @@ class Products extends Fieldtype
         return $asset->id();
     }
 
-    protected function container()
+    protected function container(): AssetContainerModel
     {
         if ($configured = $this->config('container')) {
             if ($container = AssetContainer::find($configured)) {
@@ -207,17 +221,17 @@ class Products extends Fieldtype
             /** @var \Rapidez\Core\Models\Product $productInstance */
             $productInstance = new $productModel;
             $dbProducts = $productModel::with('options')
-                ->whereIn($productInstance->qualifyColumn('sku'), $products->map(fn($product) => $product['sku']))
+                ->whereIn($productInstance->qualifyColumn('sku'), $products->map(fn(array $product) => $product['sku']))
                 ->get()
                 ->keyBy('sku');
 
-            return $products->map(function($product) use ($dbProducts, $store, $uploaded) {
+            return $products->map(function (array $product) use ($dbProducts, $store, $uploaded) {
                 $dbProduct = $dbProducts[$product['sku']] ?? null;
 
                 $productOptions = $dbProduct
                     ? collect($product['options'] ?? [])->map(function (string $optionValue, string $option) use ($dbProduct): array {
-                        $optionData = collect($dbProduct->options)->first(fn ($productOption) => $productOption->option_id == $option) ?? null;
-                        $value = collect($optionData?->values ?? [])->first(fn ($value) => $value->option_type_id == $optionValue) ?? null;
+                        $optionData = collect($dbProduct->options)->first(fn (mixed $productOption) => $productOption->option_id == $option) ?? null;
+                        $value = collect($optionData?->values ?? [])->first(fn (mixed $value) => $value->option_type_id == $optionValue) ?? null;
 
                         return [
                             'title' => $optionData?->title ?? $option,
@@ -232,13 +246,13 @@ class Products extends Fieldtype
                     : null;
 
                 $currentUploaded = collect($uploaded[$product['id'] ?? ''] ?? [])
-                    ->map(function ($id, $optionId) use ($dbProduct) {
+                    ->map(function (string $id, int|string $optionId) use ($dbProduct) {
                         $asset = Asset::findById($id);
                         if (!$asset) {
                             return null;
                         }
 
-                        $option = collect($dbProduct->options ?? [])->first(fn ($productOption) => $productOption->option_id == $optionId);
+                        $option = collect($dbProduct->options ?? [])->first(fn (mixed $productOption) => $productOption->option_id == $optionId);
 
                         return [
                             'path' => $asset->url(),
