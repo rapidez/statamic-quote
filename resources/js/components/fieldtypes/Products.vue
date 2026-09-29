@@ -21,6 +21,11 @@
                             <span class="ml-auto opacity-50">+{{ price(option.price) }}</span>
                         </div>
                     </template>
+                    <template v-for="upload in item.uploaded ?? {}">
+                        <div class="flex">
+                            <a v-bind:href="upload.path" class="opacity-75 underline" target="_blank">{{ upload.option }}: {{ upload.filename }}</a>
+                        </div>
+                    </template>
                 </div>
                 <div class="ml-auto">
                     {{ price(item.totalPrice) }}
