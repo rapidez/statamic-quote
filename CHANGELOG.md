@@ -1,6 +1,12 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.1.0...5.1.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.2.0...5.2.0)
+## [5.2.0](https://github.com/rapidez/statamic-quote/releases/tag/5.2.0) - 2026-09-29
+
+### Added
+
+- Allow file uploads through file fields (#18)
+
 ## [5.1.0](https://github.com/rapidez/statamic-quote/releases/tag/5.1.0) - 2026-09-10
 
 ### Added
