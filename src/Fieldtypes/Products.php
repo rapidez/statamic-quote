@@ -87,8 +87,12 @@ class Products extends Fieldtype
     protected function handleFileUpload(Collection $file, int|string $optionId): ?array
     {
         $name = basename($file['name'] ?? '');
-        if (! $name || ! $this->isAllowedFileType($name)) {
+        if (! $name) {
             return null;
+        }
+
+        if (! $this->isAllowedFileType($name)) {
+            throw ValidationException::withMessages(['file' => 'File type is not allowed']);
         }
 
         $data = $file['base64_encoded_data'] ?? null;
@@ -122,8 +126,12 @@ class Products extends Fieldtype
         // Check name and valueId from said data
         $name = $fileData['value'] ?? null;
         $valueId = $fileData['id'] ?? null;
-        if (! $name || ! $valueId || ! $this->isAllowedFileType($name)) {
+        if (! $name || ! $valueId) {
             return null;
+        }
+
+        if (! $this->isAllowedFileType($name)) {
+            throw ValidationException::withMessages(['file' => 'File type is not allowed']);
         }
 
         // Check if the quote item exists with the correct option id
@@ -242,7 +250,7 @@ class Products extends Fieldtype
                     : null;
 
                 $totalPrice = $dbProduct
-                    ? ($productOptions->sum('price.price') + $dbProduct->price) * $product['qty']
+                    ? ($productOptions->sum('price') + $dbProduct->price) * $product['qty']
                     : null;
 
                 $currentUploaded = collect($uploaded[$product['id'] ?? ''] ?? [])

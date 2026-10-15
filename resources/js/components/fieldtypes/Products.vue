@@ -9,7 +9,10 @@
                         :alt="item.product.name"
                         :src="`/storage/${item.store}/resizes/200/magento/catalog/product${item.product.thumbnail}.webp`"
                     />
-                    <div class="object-contain h-16 w-20 shrink-0 flex items-center justify-center opacity-50" v-else>
+                    <div
+                        class="object-contain h-16 w-20 shrink-0 flex items-center justify-center opacity-50"
+                        v-else
+                    >
                         No image
                     </div>
                 </div>
@@ -17,13 +20,23 @@
                     <span>{{ item.qty }} x {{ item.product.name }}</span>
                     <template v-for="option in item.options ?? {}">
                         <div class="flex">
-                            <span class="opacity-50">{{ option.title }}: {{ option.value.title }}</span>
-                            <span class="ml-auto opacity-50">+{{ price(option.price) }}</span>
+                            <span class="opacity-50"
+                                >{{ option.title }}:
+                                {{ option.value.title }}</span
+                            >
+                            <span class="ml-auto opacity-50"
+                                >+{{ price(option.price) }}</span
+                            >
                         </div>
                     </template>
                     <template v-for="upload in item.uploaded ?? {}">
                         <div class="flex">
-                            <a v-bind:href="upload.path" class="opacity-75 underline" target="_blank">{{ upload.option }}: {{ upload.filename }}</a>
+                            <a
+                                v-bind:href="upload.path"
+                                class="opacity-75 underline"
+                                target="_blank"
+                                >{{ upload.option }}: {{ upload.filename }}</a
+                            >
                         </div>
                     </template>
                 </div>
@@ -33,7 +46,9 @@
             </template>
             <template v-else>
                 <div class="flex flex-col">
-                    <span class="text-red-500">Product not found: {{ item.sku }}</span>
+                    <span class="text-red-500"
+                        >Product not found: {{ item.sku }}</span
+                    >
                 </div>
             </template>
         </div>
@@ -41,17 +56,22 @@
 </template>
 
 <script>
+import { FieldtypeMixin } from '@statamic/cms'
+
 export default {
-    mixins: [Fieldtype],
+    mixins: [FieldtypeMixin],
 
     methods: {
         price(value, extra = {}) {
-            return new Intl.NumberFormat(StatamicConfig.locale.replace('_', '-'), {
-                style: 'currency',
-                currency: 'EUR',
-                ...extra,
-            }).format(value)
-        }
+            return new Intl.NumberFormat(
+                StatamicConfig.locale.replace('_', '-'),
+                {
+                    style: 'currency',
+                    currency: 'EUR',
+                    ...extra,
+                },
+            ).format(value)
+        },
     },
 }
 </script>
