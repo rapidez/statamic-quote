@@ -13,6 +13,12 @@ You can install this package using Composer:
 composer install rapidez/statamic-quote
 ```
 
+You will also need to install the `idb-keyval` npm package:
+
+```sh
+yarn add --dev idb-keyval
+```
+
 Then, you'll need to publish the blueprint and form field. You're probably also going to want to publish the config file:
 
 ```sh
@@ -55,7 +61,7 @@ Note that you can use `customizable_options` here, which will automatically hand
 
 By default, this package will automatically generate a quote for you based on the products. However, you may not want this to happen for various reasons. To this end, you can disable this functionality by setting the `auto_send_quote` config setting to `false`.
 
-This can be done store-specific as well, see the [multistore configuration](https://docs.rapidez.io/4.x/configuration.html#multistore) section in the Rapidez docs.
+This can be done store-specific as well, see the [multistore configuration](https://docs.rapidez.io/5.x/configuration.html#multistore) section in the Rapidez docs.
 
 ### Hooking into the quote data
 
@@ -78,7 +84,7 @@ Eventy::addFilter('quote.data', function ($quoteData) {
         // Don't send
         return null;
     }
-    
+
     return $quoteData;
 });
 ```
