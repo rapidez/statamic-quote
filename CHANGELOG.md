@@ -1,6 +1,12 @@
 # Changelog 
 
-[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.2.0...5.2.0)
+[Unreleased changes](https://github.com/rapidez/statamic-quote/compare/5.3.0...5.3.0)
+## [5.3.0](https://github.com/rapidez/statamic-quote/releases/tag/5.3.0) - 2026-10-21
+
+### Added
+
+- Statamic 6 compatibility (#19)
+
 ## [5.2.0](https://github.com/rapidez/statamic-quote/releases/tag/5.2.0) - 2026-09-29
 
 ### Added
