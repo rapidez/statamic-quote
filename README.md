@@ -99,6 +99,16 @@ Eventy::addFilter('quote.mail', function ($mail) {
 });
 ```
 
+### Hooking into the product prices
+
+By default, the price of a product is the product price plus the prices of the selected options. You can use the `quote.product.price` Eventy filter to calculate the price yourself, for example with an external price API. The filter runs once for each product when the quote is requested, and the result is saved with the quote. The `$product` array contains the `sku`, the `qty` and the selected `options`. Return the price for a quantity of 1. Return `$price` unchanged to use the default price:
+
+```php
+Eventy::addFilter('quote.product.price', function ($price, array $product) {
+    return PriceApi::get($product['sku'], $product['options']) ?? $price;
+}, 20, 2);
+```
+
 ## Styling
 
 ### Modifying the PDF

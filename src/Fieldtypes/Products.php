@@ -13,6 +13,7 @@ use Statamic\Facades\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Fieldtypes\Assets\UndefinedContainerException;
 use Statamic\Fields\Fieldtype;
+use TorMorten\Eventy\Facades\Eventy;
 
 class Products extends Fieldtype
 {
@@ -63,7 +64,15 @@ class Products extends Fieldtype
         $products = collect(json_decode($value, true));
 
         $customOptions = $products->pluck('customOptions', 'id');
-        $savedProducts = $products->map(fn(array $product) => Arr::except($product, 'customOptions'));
+        $savedProducts = $products->map(function (array $product) {
+            $product = Arr::except($product, 'customOptions');
+            $price = Eventy::filter('quote.product.price', null, $product);
+
+            return [
+                ...$product,
+                'price' => is_numeric($price) ? (float) $price : null,
+            ];
+        });
 
         $uploaded = null;
         if ($this->config('allow_uploads') && $this->config('container')) {
@@ -250,7 +259,7 @@ class Products extends Fieldtype
                     : null;
 
                 $totalPrice = $dbProduct
-                    ? ($productOptions->sum('price') + $dbProduct->price) * $product['qty']
+                    ? ($product['price'] ?? ($productOptions->sum('price') + $dbProduct->price)) * $product['qty']
                     : null;
 
                 $currentUploaded = collect($uploaded[$product['id'] ?? ''] ?? [])
